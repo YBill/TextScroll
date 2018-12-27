@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="content_min_height">55dp</dimen>
+    <dimen name="content_max_height">300dp</dimen>
+</resources>

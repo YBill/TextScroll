@@ -5,7 +5,6 @@ import android.graphics.RectF;
 import android.os.Build;
 import android.text.method.ScrollingMovementMethod;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,9 +20,7 @@ import android.widget.TextView;
 
 public class ImageBottomLayout extends LinearLayout {
 
-    private int minLength = (int) TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 55, getContext().getResources().getDisplayMetrics()
-    );
+    private int minLength;
 
     private float lastY = 0;
     private int top;
@@ -35,9 +32,8 @@ public class ImageBottomLayout extends LinearLayout {
     private int botTop = 0;
     private int botBottom = 0;
     private int maxBottom;
-    private Context context;
 
-    private boolean isChanged;
+    private boolean isTitleViewPress = false;
 
     public ImageBottomLayout(Context context) {
         super(context);
@@ -61,16 +57,17 @@ public class ImageBottomLayout extends LinearLayout {
      * @param attrs
      */
     private void initView(Context context, AttributeSet attrs) {
+        minLength = (int) context.getResources().getDimension(R.dimen.content_min_height);
+
         LayoutInflater inflater = LayoutInflater.from(context);
         View mView = inflater.inflate(R.layout.bottom_layout, this, true);
 
-        mTitleView = (TextView) mView.findViewById(R.id.act_image_title);
-        mContentView = (TextView) mView.findViewById(R.id.bot_content);
-        pageIndex = (TextView) mView.findViewById(R.id.act_img_index);
-        pageSize = (TextView) mView.findViewById(R.id.act_img_size);
+        mTitleView = mView.findViewById(R.id.act_image_title);
+        mContentView = mView.findViewById(R.id.bot_content);
+        pageIndex = mView.findViewById(R.id.act_img_index);
+        pageSize = mView.findViewById(R.id.act_img_size);
 
         mContentView.setMovementMethod(new ScrollingMovementMethod());
-        this.context = context;
     }
 
     /**
@@ -103,21 +100,10 @@ public class ImageBottomLayout extends LinearLayout {
 
         mContentView.scrollTo(0, 0);
 
-        isChanged = false;
-        post(new Runnable() {
-            @Override
-            public void run() {
-                if (!isChanged) {
-                    layout(getLeft(), botTop, getRight(), botBottom);
-                }
-            }
-        });
-
         //添加全局布局侦听器
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                isChanged = true;
                 maxBottom = getBottom();
 
                 int minHeight = minLength;
@@ -153,6 +139,7 @@ public class ImageBottomLayout extends LinearLayout {
     public boolean dispatchTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                isTitleViewPress = false;
                 lastY = event.getRawY();
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -162,7 +149,8 @@ public class ImageBottomLayout extends LinearLayout {
                 if (distanceY > 0) {
                     RectF rect = calcViewScreenLocation(mTitleView);
                     boolean isInViewRect = rect.contains(event.getRawX(), event.getRawY());
-                    if (isInViewRect) {
+                    if (isTitleViewPress || isInViewRect) {
+                        isTitleViewPress = true;
                         isMove = true;
                     } else if (mContentView.getScrollY() > 0) {
                         isMove = false;
@@ -193,8 +181,9 @@ public class ImageBottomLayout extends LinearLayout {
 
 
                 break;
-            case MotionEvent.ACTION_POINTER_UP:
+            case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                isTitleViewPress = false;
                 break;
         }
         return super.dispatchTouchEvent(event);

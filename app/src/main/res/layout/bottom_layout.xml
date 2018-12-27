@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/activity_main"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:clickable="true"
-              android:orientation="vertical">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:id="@+id/outer_layout"
@@ -29,7 +24,7 @@
                 android:layout_toLeftOf="@id/act_img_index"
                 android:textColor="#ffffff"
                 android:textSize="17sp"
-                tools:text="title"/>
+                tools:text="title" />
 
             <TextView
                 android:id="@+id/act_img_index"
@@ -38,7 +33,7 @@
                 android:layout_toLeftOf="@id/act_img_size"
                 android:textColor="#ffffff"
                 android:textSize="19sp"
-                tools:text="1"/>
+                tools:text="1" />
 
             <TextView
                 android:id="@+id/act_img_size"
@@ -49,7 +44,7 @@
                 android:layout_marginBottom="2dp"
                 android:textColor="#ffffff"
                 android:textSize="12sp"
-                tools:text="/5"/>
+                tools:text="/5" />
         </RelativeLayout>
 
         <TextView
@@ -58,11 +53,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="9dp"
             android:lineSpacingExtra="3dp"
-            android:maxHeight="300dp"
-            android:minHeight="55dp"
+            android:maxHeight="@dimen/content_max_height"
+            android:minHeight="@dimen/content_min_height"
             android:scrollbars="vertical"
             android:textColor="#ffffff"
             android:textSize="13sp"
-            tools:text="就是因为它的因为的它的不年"/>
+            tools:text="就是因为它的因为的它的不年" />
     </LinearLayout>
-</LinearLayout>
+</merge>
