@@ -1,3 +1,5 @@
+# 另一种用法见 ： https://github.com/YBill/BottomSheetProject
+
 # TextScroll 用法
 
 ## xml
